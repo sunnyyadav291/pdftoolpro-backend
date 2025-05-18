@@ -46,7 +46,8 @@ const ToolUsage = mongoose.model('ToolUsage', ToolUsageSchema);
 // MongoDB Connection
 const connectDB = async () => {
   try {
-    const MONGO_URI = process.env.MONGO_URI;
+    const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://sunnyadav5526:Sunny%40123@cluster0.oczbgti.mongodb.net/mypdfweb';
+    console.log('Using MongoDB URI:', MONGO_URI ? 'URI is defined' : 'URI is undefined');
     
     const conn = await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
