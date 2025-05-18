@@ -47,7 +47,19 @@ const ToolUsage = mongoose.model('ToolUsage', ToolUsageSchema);
 const connectDB = async () => {
   try {
     const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://sunnyadav5526:Sunny%40123@cluster0.oczbgti.mongodb.net/mypdfweb';
-    console.log('Using MongoDB URI:', MONGO_URI ? 'URI is defined' : 'URI is undefined');
+    console.log('Attempting to connect to MongoDB with URI defined:', !!MONGO_URI);
+    
+    if (!MONGO_URI) {
+      throw new Error('MongoDB URI is undefined. Please check environment variables.');
+    }
+    
+    console.log('MongoDB connection options:', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 30000,
+      socketTimeoutMS: 45000,
+      family: 4
+    });
     
     const conn = await mongoose.connect(MONGO_URI, {
       useNewUrlParser: true,
@@ -59,7 +71,8 @@ const connectDB = async () => {
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error('MongoDB connection error details:', error.message);
+    console.error('Full error object:', JSON.stringify(error, Object.getOwnPropertyNames(error)));
     // Don't exit the process, let the app continue without DB
     console.log('Running without MongoDB connection. Some features may be limited.');
   }
